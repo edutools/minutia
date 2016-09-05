@@ -1,22 +1,14 @@
 import I from 'immutable'
 
-const sloppyEquivelants = I.fromJS([
-  {
-    a: 'mass',
-    b: 'weight',
-    factor: 0.00022046226218
-  }
-])
-
 const sourceData = I.fromJS({
   mass: {
     units: {
       microgram: {
-        factor: 1000000,
+        factor: 1/1000000,
         abbr: ['mcg', 'µg']
       },
       miligram: {
-        factor: 1000,
+        factor: 1/1000,
         abbr: ['mg']
       },
       gram: {
@@ -24,45 +16,53 @@ const sourceData = I.fromJS({
         abbr: ['g']
       },
       decagram: {
-        factor: 0.1,
+        factor: 10,
         abbr: ['dag']
       },
       hectogram: {
-        factor: 0.01,
+        factor: 100,
         abbr: ['hg']
       },
       kilogram: {
-        factor: 0.001,
+        factor: 1000,
         abbr: ['kg']
       },
-    },
-  },
-  weight: {
-    units: {
       pound: {
-        factor: 1,
-        abbr: ['lb']
+        factor: 453.592374,
+        abbr: ['lb', 'lbs']
       },
       ounce: {
-        factor: 16,
+        factor: 28.3495231,
         abbr: ['oz']
-      },
+      }
     },
   },
   length: {
     units: {
       milimeter: {
-        factor: 1000,
+        factor: 0.001,
         abbr: ['mm']
       },
       centimeter: {
-        factor: 100,
+        factor: 0.01,
         abbr: ['cm']
       },
       meter: {
         factor: 1,
         abbr: ['m']
       },
+      foot: {
+        factor: 0.3048,
+        abbr: ['ft', "'"]
+      },
+      inch: {
+        factor: 0.0253999998,
+        abbr: ['in', '"']
+      },
+      yard: {
+        factor: 0.914399999,
+        abbr: ['yd', 'yds']
+      }
     },
   },
 })
@@ -96,6 +96,8 @@ const abbreviations = I.Map().withMutations(abbreviations => {
       // add the abbreviation to the map
       abbreviations.set(abbreviation, unitName)
     })
+    // add the unit name as another abbreviation
+    abbreviations.set(unitName, unitName)
   })
 
 })
@@ -103,9 +105,14 @@ const abbreviations = I.Map().withMutations(abbreviations => {
 // map to lookup info about a specific family
 // (right now it's just a list of units in that family)
 const families = sourceData.map((familyInfo, familyName) => {
-  // immutable array of keys (constructed from an iterator of keys)
+
+  // the list of unit names within that family
   const units = I.Set(familyInfo.get('units').keySeq())
-  return I.Map({ units })
+
+  // base or "native" unit
+  const baseUnit = familyInfo.get('units').findKey(u => u.factor === 1)
+
+  return I.Map({ units, baseUnit })
 })
 
 // es2015 modules export
@@ -113,7 +120,7 @@ export { units, abbreviations, families }
 // compatibility with commonJs
 export default { units, abbreviations, families }
 
-if (process.argv[2] === 'test') {
+if ((process.argv[2] === 'test') && (require.main === module)) {
   console.log('-----------------------------------------------')
   console.log(units.toJS())
   console.log('-----------------------------------------------')
