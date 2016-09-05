@@ -1,0 +1,31 @@
+{
+  "name": "minutia",
+  "version": "1.0.0",
+  "description": "Unit converting library",
+  "main": "dist/minutia.js",
+  "jsnext:main": "src/minutia.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "watch": "babel src -d dist --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edutools/minutia.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edutools/minutia/issues"
+  },
+  "homepage": "https://github.com/edutools/minutia#readme",
+  "dependencies": {
+    "immutable": "^3.8.1",
+    "wrappy": "^1.0.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0"
+  }
+}
