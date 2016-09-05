@@ -99,6 +99,9 @@ Minutia.prototype.to = function(destUnit) {
 
 }
 
+export default Minutia
+module.exports = Minutia
+
 if ((process.argv[2] === 'test') && (require.main === module)) {
   console.log(Minutia('5kg 5g').to('lbs'))
   console.log(Minutia('5ft 10"').to('m'))
